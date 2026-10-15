@@ -30,3 +30,9 @@ The product film is 51 seconds. It includes the full folding, lifting and car-lo
 The original Sites-hosted project and Apple-style version are maintained separately.
 
 [GitHub Pages workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
+
+## Playable game
+
+The card immediately below the hero opens `/airi-walker-journey/game/`. `game-source/` contains the standalone browser game. Run `npm --prefix game-source ci` before the root build; the deployment workflow builds both apps.
+
+The public game uses browser-local text command matching and sample buttons. GitHub Pages does not run the desktop Python/Whisper/Qwen backend; no microphone or AI inference is claimed for this web edition. Gameplay is a scripted concept demonstration. The card's “First Person” wording invites hands-on play; the game camera remains third-person. The local AI-enabled version is maintained separately.

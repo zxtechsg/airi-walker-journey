@@ -1,0 +1,287 @@
+{
+  "purpose": "Verified research context for the AIRI concept game; neither model controls game saves or hardware.",
+  "sources": [
+    {
+      "path": "fall_lab/v2/reports/training.json",
+      "sha256": "280592cc2d0c467c96d69c37bb3a37855da3a3bdeef79419473a8ab67dabbb31"
+    },
+    {
+      "path": "fall_lab/v2/protocol.json",
+      "sha256": "b8884ece90a2eb179dcd4cd4f24ad41208c2b0f93c313911eab20b622a7abc51"
+    },
+    {
+      "path": "fall_lab/v2/reports/frozen_audit.json",
+      "sha256": "5973a3153cb979e5b6662056d225f8e67d17aa3d82b2fdf96b68e14220f9c416"
+    },
+    {
+      "path": "fall_lab/real_reference/v2/report.json",
+      "sha256": "272cbf200faf416dd79b35465d524dcd58db700e8f7b2f7cdadce6115db315a2"
+    },
+    {
+      "path": "fall_lab/v2/reports/public_pipeline_independent_audit.json",
+      "sha256": "675522accbc843416236743c3b886a1d8313cdbae9c95df90b9e0f24f096e023"
+    }
+  ],
+  "synthetic_walker": {
+    "model_name": "Milo Walker IMU V2 \u00b7 research",
+    "episodes": 1920,
+    "split_counts": {
+      "train": 1152,
+      "validation": 384,
+      "test": 384
+    },
+    "profile_counts": {
+      "train": 36,
+      "validation": 12,
+      "test": 12
+    },
+    "profile_note": "Profiles are synthetic physical/sensor parameter vectors, not real human subjects. Parameter ranges overlap; exact vectors and seeds are disjoint.",
+    "architecture": {
+      "kind": "histogram gradient boosted trees",
+      "trees": 160,
+      "features": 88,
+      "nodes": 9760,
+      "runtime": "pure Python stdlib JSON"
+    },
+    "input_contract": [
+      "walker gravity-free acceleration xyz m/s\u00b2",
+      "walker gyro xyz deg/s"
+    ],
+    "selection": "Validation-only max before-outcome episode F1; ties fewer false-alarm benign episodes then higher threshold. Threshold grid .05 to .95 step .025.",
+    "evaluation_scope": "Stop scoring .5s after first outcome in fall episodes; full episode for nonfalls. Late event detection is reported separately. No survival after that interval claimed.",
+    "limitations": [
+      "Synthetic rigid-body balance and sliding-gait surrogate, not a biomechanically validated human model.",
+      "Profile-disjoint simulation improves the experiment, not proof of real-person transfer; numeric parameters are engineering assumptions.",
+      "Walker IMU cannot reliably see an uncoupled person fall; coupling-stratified misses are retained.",
+      "Synthetic prevalence and short10s trials do not represent deployment. False alarms/hour is extrapolation from stated exposure, not a day-long field test.",
+      "Future outcome labels use .75s lookahead; features use only current/past sensors. Scores are not calibrated real-person fall probabilities.",
+      "No hardware authority; no real-human clinical or safety validation. Public body-worn model is evaluated separately."
+    ],
+    "test": {
+      "episode_count": 384,
+      "fall_episodes": 102,
+      "benign_episodes": 282,
+      "preimpact_hits": 46,
+      "preimpact_misses": 56,
+      "preimpact_episode_recall": 0.45098039215686275,
+      "event_hits": 71,
+      "event_episode_recall": 0.696078431372549,
+      "body_contact_episodes": 100,
+      "before_body_contact_hits": 48,
+      "before_body_contact_episode_recall": 0.48,
+      "false_alarm_episodes": 48,
+      "benign_episode_false_alarm_rate": 0.1702127659574468,
+      "episode_preimpact_f1": 0.46938775510204084,
+      "false_alarm_events": 56,
+      "negative_exposure_s": 2734.0800000000004,
+      "false_alarms_per_hour": 73.73595505617976,
+      "threshold": 0.7
+    },
+    "lead_time": {
+      "median": 0.1389999999999847,
+      "minimum": 0.005999999999999339,
+      "misses_excluded_from_lead_summary": 56
+    }
+  },
+  "body_worn": {
+    "model": {
+      "name": "UMAFall Waist MIL v2",
+      "kind": "Weakly supervised causal-window multiple-instance classifier",
+      "sha256": "0ee2bc594185b27f3d97b7f576390470d6dd237953fede912055496d683abd07",
+      "threshold": 0.65,
+      "selected_candidate": "mlp64_mil",
+      "epoch": 65,
+      "sensor_placement": "WAIST",
+      "domain": "real body-worn IMU",
+      "runtime_path": "fall_lab/real_reference/v2/model.py"
+    },
+    "architecture": {
+      "kind": "77 \u2192 64 tanh \u2192 1 sigmoid MLP",
+      "features": 77,
+      "hidden_units": 64,
+      "output_units": 1,
+      "parameter_count": 5057,
+      "trainable_weight_bias_count": 5057,
+      "preprocessing_constants": 154,
+      "runtime": "NumPy dense layers loaded from fixed JSON weights",
+      "supervision": "Weak whole-trial labels; mean top-three causal-window logits during training"
+    },
+    "dataset": {
+      "title": "UMAFall corrected author deposit v8",
+      "doi": "https://doi.org/10.6084/m9.figshare.4214283.v8",
+      "license": "CC BY 4.0",
+      "archive_sha256": "927be970946c7ab2cd203ca0ab466dc3f513d7000ae774bad8116904c570bcbc",
+      "trial_count": 746,
+      "subject_count": 19,
+      "source_urls": [
+        "https://figshare.com/articles/dataset/UMA_ADL_FALL_Dataset_zip/4214283",
+        "https://doi.org/10.1016/j.procs.2017.06.110",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5948572/"
+      ]
+    },
+    "split": {
+      "train_subjects": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "08",
+        "10",
+        "12",
+        "13",
+        "16",
+        "17",
+        "18"
+      ],
+      "val_subjects": [
+        "06",
+        "09",
+        "14"
+      ],
+      "test_subjects": [
+        "07",
+        "11",
+        "15",
+        "19"
+      ],
+      "split_sha256": "d858cff10e5a2e45ce86c50a3a28f4a26ce8f5dd30d9a0023c76254705bcb764",
+      "prior_seen_v1_subjects_train_only": [
+        "02",
+        "04",
+        "05"
+      ]
+    },
+    "coverage": {
+      "train": {
+        "total_trials": 480,
+        "evaluable_trials": 409,
+        "unavailable_trials": 71,
+        "evaluable_fraction": 0.8520833333333333,
+        "all_fall_trials": 128,
+        "evaluable_fall_trials": 127,
+        "unavailable_fall_trials": 1,
+        "all_adl_trials": 352,
+        "evaluable_adl_trials": 282,
+        "unavailable_adl_trials": 70,
+        "unavailable_reasons": {
+          "missing_both_waist_channels": 71
+        },
+        "participants_with_evaluable_falls": [
+          "02",
+          "04",
+          "05",
+          "08",
+          "16",
+          "17",
+          "18"
+        ],
+        "participants_with_evaluable_adl": [
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "08",
+          "10",
+          "12",
+          "16",
+          "17",
+          "18"
+        ]
+      },
+      "validation": {
+        "total_trials": 116,
+        "evaluable_trials": 94,
+        "unavailable_trials": 22,
+        "evaluable_fraction": 0.8103448275862069,
+        "all_fall_trials": 26,
+        "evaluable_fall_trials": 26,
+        "unavailable_fall_trials": 0,
+        "all_adl_trials": 90,
+        "evaluable_adl_trials": 68,
+        "unavailable_adl_trials": 22,
+        "unavailable_reasons": {
+          "missing_both_waist_channels": 22
+        },
+        "participants_with_evaluable_falls": [
+          "06",
+          "14"
+        ],
+        "participants_with_evaluable_adl": [
+          "06",
+          "09",
+          "14"
+        ]
+      },
+      "test": {
+        "total_trials": 150,
+        "evaluable_trials": 114,
+        "unavailable_trials": 36,
+        "evaluable_fraction": 0.76,
+        "all_fall_trials": 54,
+        "evaluable_fall_trials": 36,
+        "unavailable_fall_trials": 18,
+        "all_adl_trials": 96,
+        "evaluable_adl_trials": 78,
+        "unavailable_adl_trials": 18,
+        "unavailable_reasons": {
+          "missing_both_waist_channels": 36
+        },
+        "participants_with_evaluable_falls": [
+          "07",
+          "11",
+          "15"
+        ],
+        "participants_with_evaluable_adl": [
+          "07",
+          "11",
+          "15",
+          "19"
+        ]
+      }
+    },
+    "limitations": [
+      "Body-worn waist IMU, not a walker-mounted sensor.",
+      "Falls were voluntarily staged; this does not establish real elderly-fall performance.",
+      "Wholetrial fall/ADL labels only; no verified onset/impact timestamps or preimpact lead-time claims.",
+      "Overlapping causal windows are not independent events; metrics use held-out whole trials and participants.",
+      "ADL rates use short selected recordings and valid-window exposure, not continuous daily deployment.",
+      "Wilson intervals assume independent trials and do not account for clustering; per-participant metrics are provided.",
+      "One locked test evaluation after validation-only selection; no test threshold tuning.",
+      "Test coverage114/150 trials (76%):36 recordings have no waist accel or gyro rows. All are Subject19, including all18 of that participant's falls. Fall sensitivity is based on3 participants, not all4 test IDs.",
+      "No early-warning or pre-impact claim: a trial alarm may occur after a staged fall. This is an offline body-worn research cue with no brake or other hardware output.",
+      "Zero observed ADL alarms over0.279 eligible hours does not establish zero deployment risk; the one-sided95% Poisson upper bound is about10.74 events/hour and trial clustering weakens independence assumptions."
+    ],
+    "deployment_scope": {
+      "domain": "WAIST_BODY_WORN",
+      "purpose": "Offline recorded-data research cue",
+      "walker_frame_supported": false,
+      "preimpact_validated": false,
+      "motor_authority": false,
+      "hardware_outputs": false,
+      "live_human_safety_validation": false
+    },
+    "walker_transfer_validated": false,
+    "test": {
+      "fall_trials": 36,
+      "detected_fall_trials": 33,
+      "fall_trial_sensitivity": 0.9166666666666666,
+      "adl_trials": 78,
+      "adl_alarm_trials": 0,
+      "adl_alarm_trial_fraction": 0.0,
+      "adl_exposure_hours": 0.2788888888888889,
+      "adl_alarm_events": 0,
+      "adl_alarm_events_per_exposure_hour": 0.0,
+      "balanced_accuracy": 0.9583333333333333,
+      "unevaluable_trials": 36,
+      "trial_count": 150,
+      "all_fall_trials": 54,
+      "all_adl_trials": 96,
+      "macro_subject_balanced_accuracy": 0.9305555555555555,
+      "availability_aware_detected_fraction_of_all_fall_trials": 0.6111111111111112,
+      "availability_aware_fraction_note": "33/54 supplied fall trials detected; unavailable recordings are not imputed classification failures. Conditional sensitivity remains33/36 evaluable trials.",
+      "adl_zero_events_poisson_one_sided_95_upper_per_hour": 10.741669506767296
+    }
+  }
+}

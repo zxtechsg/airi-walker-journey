@@ -133,6 +133,13 @@ export default function Home() {
       <div className="hero-bottom"><span>Assisted Intelligent Reactive Independence</span><div><span>Comes to you.</span><span>Moves with you.</span><span>Made for you.</span></div></div>
     </section>
 
+    <section className="game-invitation content-width" id="play" aria-labelledby="game-invitation-title">
+      <a className="game-invitation-card" href="./game/">
+        <div className="game-invitation-copy"><p className="eyebrow">PLAY THE AIRI EXPERIENCE</p><h2 id="game-invitation-title">Experience AIRI<br /><em>in First Person.</em></h2><p>Take control of Rose. Explore the neighbourhood, test the obstacles and discover what AIRI could do.</p><span className="game-invitation-cta">Play the game <MoveRight size={22} /></span><small>Free to play · About 5 minutes · Browser demo</small></div>
+        <div className="game-invitation-image"><img src="./assets/airi-game-preview.png" alt="Rose exploring the AIRI game with her smart walker" width="1100" height="760" loading="lazy" /><span><Play size={20} fill="currentColor" /> THE MILLION DOLLAR STROLL</span></div>
+      </a>
+    </section>
+
     <ScrollStatement motionOn={motionOn} />
 
     <section className="highlights section-tint" id="highlights" ref={highlightsRef} aria-labelledby="highlights-title"><div className="section-heading content-width reveal"><div><p className="eyebrow">THE LITTLE THINGS. REIMAGINED.</p><h2 id="highlights-title">Support, in every detail.</h2></div><button className="text-link" onClick={() => setFilmOpen(true)}>Watch How It Works <Play size={17} fill="currentColor" /></button></div>
